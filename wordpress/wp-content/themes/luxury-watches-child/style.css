@@ -1,0 +1,243 @@
+/*
+Theme Name: Luxury Watches Atelier
+Theme URI: http://localhost/luxury-watches/wordpress/
+Description: Giao diện cửa hàng và đấu giá đồng hồ cao cấp, kế thừa WooCommerce Storefront.
+Author: Luxury Watches
+Template: storefront
+Version: 1.3.0
+Text Domain: luxury-watches
+*/
+
+:root {
+  --lw-font-body: "Segoe UI", sans-serif;
+  --lw-font-display: "Times New Roman", serif;
+  --lw-ink: #11100e;
+  --lw-coal: #1b1916;
+  --lw-cream: #f5f0e7;
+  --lw-paper: #fbfaf7;
+  --lw-gold: #a87932;
+  --lw-gold-deep: #77511d;
+  --lw-line: #ded5c7;
+  --lw-muted: #675f55;
+  --lw-success: #1f684f;
+  --lw-radius: 14px;
+  --lw-shadow: 0 18px 45px rgba(39, 29, 14, .12);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--lw-paper);
+  color: var(--lw-ink);
+  font-family: var(--lw-font-body);
+  line-height: 1.65;
+  font-kerning: normal;
+}
+button, input, select, textarea,
+.main-navigation, .site-header-cart, .woocommerce,
+.woocommerce button, .woocommerce input, .woocommerce select,
+.woocommerce a.button, .lw-button, .lw-auction-card,
+.lw-bid-form { font-family: var(--lw-font-body); }
+h1, h2, h3, h4, h5, h6,
+.site-branding .site-title,
+.lw-display,
+.woocommerce-loop-product__title,
+.product_title,
+.entry-title { font-family: var(--lw-font-display); letter-spacing: normal; }
+::selection { background: #d5b477; color: #16120d; }
+a { color: var(--lw-gold-deep); text-underline-offset: .22em; }
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 3px solid #c18b37;
+  outline-offset: 3px;
+}
+
+.site-header {
+  background: rgba(17, 16, 14, .98);
+  border-bottom: 1px solid rgba(213, 180, 119, .3);
+  color: #fff;
+  padding: 1.4rem 0 0;
+  margin-bottom: 0;
+}
+.home.page.lw-home .site-header { margin-bottom: 0; }
+.site-header .site-branding .site-title a,
+.site-header .site-branding .site-description { color: #fff; }
+.site-branding .site-title {
+  font-size: clamp(1.55rem, 3vw, 2.25rem);
+  letter-spacing: normal;
+}
+.site-branding .site-description { color: #cfc5b5; }
+.storefront-primary-navigation { background: rgba(255,255,255,.035); }
+.main-navigation ul.menu > li > a,
+.main-navigation ul.nav-menu > li > a { color: #f5f0e7; font-weight: 600; }
+.main-navigation ul li a:hover { color: #e2be7c; }
+.site-header-cart .cart-contents { color: #f5f0e7; }
+
+.lw-home .site-content { padding: 0; }
+.lw-home .col-full { max-width: 100%; margin: 0; padding: 0; }
+.lw-home .content-area { width: 100%; float: none; margin: 0; }
+.lw-home .site-main { margin: 0; }
+
+.lw-wrap { width: min(1180px, calc(100% - 40px)); margin-inline: auto; }
+.lw-display {
+  font-weight: 500;
+  letter-spacing: normal;
+  line-height: 1.04;
+}
+
+.lw-hero {
+  min-height: 660px;
+  display: grid;
+  align-items: end;
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  background: #17130f;
+}
+.lw-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(12,10,8,.94) 0%, rgba(12,10,8,.7) 46%, rgba(12,10,8,.12) 76%), var(--lw-hero-image) center/cover no-repeat;
+  transform: scale(1.015);
+}
+.lw-hero__content { position: relative; z-index: 1; padding: 7rem 0 6rem; }
+.lw-hero h1 { color: #fff; max-width: 820px; font-size: clamp(3rem, 7.6vw, 6rem); margin: 0 0 1.35rem; }
+.lw-hero p { max-width: 660px; color: #e7ded0; font-size: clamp(1.05rem, 2vw, 1.28rem); margin-bottom: 2.2rem; }
+.lw-actions { display: flex; flex-wrap: wrap; gap: .85rem; }
+.lw-button,
+.woocommerce a.button.lw-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: .78rem 1.25rem;
+  border: 1px solid var(--lw-gold);
+  border-radius: 4px;
+  background: var(--lw-gold);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform .22s cubic-bezier(.2,.8,.2,1), background .22s ease, box-shadow .22s ease;
+}
+.lw-button:hover { background: #8f6226; color: #fff; transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.2); }
+.lw-button--ghost { background: transparent; border-color: rgba(255,255,255,.6); }
+.lw-button--ghost:hover { background: #fff; color: var(--lw-ink); }
+
+.lw-trust { background: var(--lw-cream); border-bottom: 1px solid var(--lw-line); }
+.lw-trust__grid { display: grid; grid-template-columns: repeat(3,1fr); }
+.lw-trust__item { padding: 1.3rem 1.8rem; text-align: center; border-right: 1px solid var(--lw-line); }
+.lw-trust__item:last-child { border-right: 0; }
+.lw-trust strong { display: block; font-family: var(--lw-font-display); font-size: 1.07rem; }
+.lw-trust span { color: var(--lw-muted); font-size: .9rem; }
+
+.lw-section { padding: clamp(4.5rem, 9vw, 7.5rem) 0; }
+.lw-section--dark { background: var(--lw-coal); color: #f8f3eb; }
+.lw-section--cream { background: var(--lw-cream); }
+.lw-section__head { display: flex; align-items: end; justify-content: space-between; gap: 2rem; margin-bottom: 2.8rem; }
+.lw-section__head h2 { font-size: clamp(2.2rem, 5vw, 4.2rem); margin: 0; max-width: 760px; }
+.lw-section__head p { color: var(--lw-muted); max-width: 470px; margin: 0; }
+.lw-section--dark .lw-section__head h2 { color: #fff; }
+.lw-section--dark .lw-section__head p { color: #cec4b5; }
+
+.lw-products ul.products { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 1.2rem; margin: 0; }
+.lw-products ul.products::before, .lw-products ul.products::after { display: none; }
+.lw-products ul.products li.product { width: 100% !important; max-width: none; float: none; margin: 0 !important; text-align: left; background: #fff; border-radius: var(--lw-radius); overflow: hidden; box-shadow: 0 10px 30px rgba(39,29,14,.08); }
+.lw-products ul.products li.product img { aspect-ratio: 4/3; object-fit: cover; margin: 0; transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+.lw-products ul.products li.product:hover img { transform: scale(1.035); }
+.lw-products .woocommerce-loop-product__title, .lw-products .price, .lw-products li.product .button { margin-left: 1.15rem; margin-right: 1.15rem; }
+.lw-products .woocommerce-loop-product__title { padding-top: 1.1rem !important; font-family: var(--lw-font-display); font-size: 1.15rem !important; }
+.lw-products .price { color: var(--lw-gold-deep) !important; font-weight: 700 !important; }
+.lw-products li.product .button { margin-bottom: 1.25rem; border-radius: 4px; }
+
+.lw-section--gender { background: #fbfaf7; }
+.lw-gender-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 2rem; }
+.lw-gender-panel { padding: clamp(1.25rem,3vw,2rem); border: 1px solid var(--lw-line); border-radius: calc(var(--lw-radius) + 2px); }
+.lw-gender-panel--men { background: #eeeae3; }
+.lw-gender-panel--women { background: #f6eee8; }
+.lw-gender-panel__head { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
+.lw-gender-panel__head span { color: var(--lw-muted); font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.lw-gender-panel__head h2 { margin: .15rem 0 0; font-size: clamp(2rem,3.4vw,3rem); }
+.lw-gender-panel__head a { font-weight: 700; white-space: nowrap; }
+.lw-gender-panel .lw-products ul.products { grid-template-columns: repeat(2,minmax(0,1fr)); }
+
+.lw-auction-feature { display: grid; grid-template-columns: 1.08fr .92fr; min-height: 540px; overflow: hidden; border-radius: var(--lw-radius); background: #0e0d0b; box-shadow: var(--lw-shadow); }
+.lw-auction-feature__visual { min-height: 460px; background: linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.5)), var(--lw-auction-image) center/cover no-repeat; }
+.lw-auction-feature__content { display: flex; flex-direction: column; justify-content: center; padding: clamp(2rem,6vw,5rem); }
+.lw-auction-feature h2 { color: #fff; font-size: clamp(2.4rem,5vw,4.5rem); margin: 0 0 1.1rem; }
+.lw-auction-feature p { color: #d7cebf; max-width: 48ch; }
+.lw-auction-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.4rem 0 2rem; }
+.lw-auction-meta div { padding-top: .8rem; border-top: 1px solid rgba(255,255,255,.2); }
+.lw-auction-meta span { display: block; color: #ada394; font-size: .82rem; text-transform: uppercase; letter-spacing: .09em; }
+.lw-auction-meta strong { color: #fff; font-variant-numeric: tabular-nums; }
+
+.lw-journal { display: grid; grid-template-columns: 1.25fr .75fr; gap: 1.3rem; }
+.lw-story { min-height: 430px; display: flex; align-items: end; position: relative; overflow: hidden; border-radius: var(--lw-radius); color: #fff; background: #25211c center/cover no-repeat; box-shadow: var(--lw-shadow); }
+.lw-story::before { content:""; position:absolute; inset:0; background: linear-gradient(180deg,transparent 25%,rgba(12,10,8,.92)); }
+.lw-story__content { position: relative; z-index: 1; padding: 2rem; }
+.lw-story h3 { color: #fff; font-family: var(--lw-font-display); font-size: clamp(1.6rem,3vw,2.7rem); margin-bottom: .5rem; }
+.lw-story a { color: #f0ce8e; font-weight: 700; }
+
+.lw-service-grid { display:grid; grid-template-columns: repeat(3,1fr); gap: 2rem; }
+.lw-care-feature {
+  display: grid;
+  grid-template-columns: .82fr 1.18fr;
+  overflow: hidden;
+  margin-bottom: 3rem;
+  border-radius: var(--lw-radius);
+  background: #fff;
+  box-shadow: var(--lw-shadow);
+}
+.lw-care-feature__content { display: flex; flex-direction: column; justify-content: center; padding: clamp(2rem, 5vw, 4.5rem); }
+.lw-care-feature__content h2 { margin: 0 0 1rem; font-size: clamp(2.1rem, 4.6vw, 3.8rem); }
+.lw-care-feature__content p { color: var(--lw-muted); max-width: 46ch; }
+.lw-care-feature__image { width: 100%; height: 100%; min-height: 430px; object-fit: cover; }
+.lw-service { overflow: hidden; border: 1px solid var(--lw-line); border-radius: var(--lw-radius); background: #fff; box-shadow: 0 12px 30px rgba(39,29,14,.08); }
+.lw-service img { display: block; width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+.lw-service__content { padding: 1.4rem 1.45rem 1.6rem; }
+.lw-service h3 { font-family: var(--lw-font-display); font-size: 1.4rem; margin: 0 0 .65rem; }
+.lw-service p { color: var(--lw-muted); margin: 0; }
+
+.site-footer { background: #11100e; color: #cfc5b5; padding: 3.5rem 0; }
+.site-footer a { color: #e4c384; }
+.site-info { padding: 0; }
+
+.post-type-archive-product .site-main,
+.single-product .site-main,
+.woocommerce-cart .site-main,
+.woocommerce-checkout .site-main,
+.woocommerce-account .site-main,
+.post-type-archive-watch_auction .site-main,
+.single-watch_auction .site-main { padding-top: 2rem; }
+.single-watch_auction .content-area,
+.post-type-archive-watch_auction .content-area { float: none; width: 100%; margin-right: 0; }
+.single-watch_auction .entry-header,
+.single-watch_auction .entry-content { max-width: 900px; margin-left: auto; margin-right: auto; }
+.single-watch_auction .wp-post-image { width: 100%; max-height: 560px; object-fit: cover; border-radius: var(--lw-radius); }
+.woocommerce ul.products li.product img { border-radius: 12px; }
+.woocommerce span.onsale { background: var(--lw-success); color: #fff; border: 0; }
+
+@media (max-width: 900px) {
+  .lw-products ul.products { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .lw-gender-grid { grid-template-columns: 1fr; }
+  .lw-auction-feature { grid-template-columns: 1fr; }
+  .lw-auction-feature__visual { min-height: 360px; }
+  .lw-journal { grid-template-columns: 1fr; }
+  .lw-care-feature { grid-template-columns: 1fr; }
+  .lw-care-feature__image { min-height: 330px; order: -1; }
+}
+@media (max-width: 760px) {
+  .lw-wrap { width: min(100% - 28px,1180px); }
+  .lw-hero { min-height: 600px; }
+  .lw-hero__content { padding: 5rem 0 4rem; }
+  .lw-trust__grid { grid-template-columns: 1fr; }
+  .lw-trust__item { border-right: 0; border-bottom: 1px solid var(--lw-line); }
+  .lw-section__head { display: block; }
+  .lw-section__head p { margin-top: 1rem; }
+  .lw-products ul.products { grid-template-columns: 1fr; }
+  .lw-gender-panel .lw-products ul.products { grid-template-columns: 1fr; }
+  .lw-service-grid { grid-template-columns: 1fr; }
+  .lw-auction-meta { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}

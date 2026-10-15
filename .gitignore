@@ -1,0 +1,40 @@
+# Repository metadata and documentation are tracked explicitly.
+/*
+!/.gitignore
+!/README.md
+!/scripts/
+!/scripts/**
+!/wordpress/
+
+# WordPress core and local configuration are installed separately.
+/wordpress/*
+!/wordpress/wp-content/
+/wordpress/wp-content/*
+
+# Project-owned theme.
+!/wordpress/wp-content/themes/
+/wordpress/wp-content/themes/*
+!/wordpress/wp-content/themes/luxury-watches-child/
+!/wordpress/wp-content/themes/luxury-watches-child/**
+/wordpress/wp-content/themes/luxury-watches-child/assets/images/*.png
+
+# Project-owned auction plugin.
+!/wordpress/wp-content/plugins/
+/wordpress/wp-content/plugins/*
+!/wordpress/wp-content/plugins/luxury-auctions/
+!/wordpress/wp-content/plugins/luxury-auctions/**
+
+# Media used by products and articles. Runtime logs and analytics stay ignored.
+!/wordpress/wp-content/uploads/
+/wordpress/wp-content/uploads/*
+!/wordpress/wp-content/uploads/woocommerce-placeholder.webp
+!/wordpress/wp-content/uploads/2026/
+!/wordpress/wp-content/uploads/2026/**
+
+# Local secrets, generated archives, caches and logs.
+wp-config.php
+*.log
+*.sql
+*.zip
+.DS_Store
+Thumbs.db

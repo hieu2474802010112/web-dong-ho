@@ -29,7 +29,18 @@ WordPress core, plugin bên thứ ba, cấu hình cơ sở dữ liệu, log và 
 ```powershell
 C:\xampp\php\php.exe scripts\add_luxury_products.php
 C:\xampp\php\php.exe scripts\add_gender_collections.php
+C:\xampp\php\php.exe scripts\add_auction_collection.php
+C:\xampp\php\php.exe scripts\add_new_arrivals_20.php
+C:\xampp\php\php.exe scripts\add_information_pages.php
 ```
+
+Script `add_new_arrivals_20.php` tạo hoặc cập nhật 20 sản phẩm LW Atelier thuộc **Bộ sưu tập mới 2026**, kèm ảnh riêng, giá bán, tồn kho và phân loại Nam/Nữ. Script có thể chạy lại mà không tạo sản phẩm trùng SKU.
+
+Ảnh sản phẩm dùng WebP để giảm dung lượng tải trang. Khi cần tạo lại từ ảnh PNG nguồn, chạy `python scripts/optimize_new_arrivals.py` trước khi nhập sản phẩm.
+
+Script `add_information_pages.php` tạo hoặc cập nhật các trang hướng dẫn mua hàng, đấu giá, đổi trả, vận chuyển, bảo mật và câu hỏi thường gặp.
+
+Quy trình tạo, kiểm tra và vận hành phiên đấu giá được mô tả tại `docs/AUCTION_WORKFLOW.md`.
 
 Website cục bộ mặc định: `http://localhost/luxury-watches/wordpress/`.
 

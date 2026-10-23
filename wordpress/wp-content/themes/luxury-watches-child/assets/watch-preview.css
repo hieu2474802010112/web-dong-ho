@@ -1,0 +1,15 @@
+.lw-watch-preview { display: block; position: relative; overflow: hidden; aspect-ratio: 1 / 1; }
+.woocommerce ul.products li.product .lw-watch-preview > img { display: block; width: 100%; height: 100%; aspect-ratio: 1 / 1; object-fit: cover; margin: 0; border-radius: 0; }
+.woocommerce ul.products li.product .lw-watch-preview__alternate { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+.woocommerce ul.products li.product .lw-watch-preview__alternate.is-visible { opacity: 1; }
+.lw-watch-preview__hint { position: absolute; bottom: .75rem; right: .75rem; z-index: 2; padding: .35rem .6rem; border-radius: 4px; color: #fff; background: rgba(18,15,12,.82); font-size: .72rem; line-height: 1.3; }
+
+@media (hover: hover) {
+  .lw-auction-card .lw-auction-card__image:hover img { transform: scale(1.2); }
+}
+.lw-auction-card .lw-auction-card__image:focus-visible img { transform: scale(1.2); }
+.lw-auction-card__image:focus-visible { outline: 3px solid #c08a40; outline-offset: -3px; }
+@media (prefers-reduced-motion: reduce) {
+  .woocommerce ul.products li.product .lw-watch-preview__alternate { transition: none; }
+  .lw-auction-card .lw-auction-card__image:hover img, .lw-auction-card .lw-auction-card__image:focus-visible img { transition: none; }
+}

@@ -1,0 +1,38 @@
+/* A compact navigation with a restrained gold moving indicator. */
+@media(min-width:768px){
+ .storefront-primary-navigation{background:#191713;border-top:1px solid rgba(216,180,119,.12)}
+ .main-navigation .primary-navigation>ul.menu{position:relative;display:flex;align-items:center;gap:2px;min-height:62px;overflow:visible}
+ .main-navigation .primary-navigation>ul.menu>li{position:relative;z-index:2;float:none}
+ .main-navigation .primary-navigation>ul.menu>li>a{position:relative;display:block;padding:.7rem .85rem;border-radius:999px;color:#f5f0e7;font-size:.88rem;font-weight:600;white-space:nowrap;transition:color .2s}
+ .main-navigation .primary-navigation>ul.menu>li>a:hover,.main-navigation .primary-navigation>ul.menu>li>a:focus-visible{color:#f5d79f}
+ .main-navigation .primary-navigation>ul.menu>li.lw-watch-menu>a::after{content:"";display:inline-block;width:6px;height:6px;margin-left:8px;vertical-align:3px;border-right:1px solid currentColor;border-bottom:1px solid currentColor;transform:rotate(45deg)}
+ .lw-nav-indicator{position:absolute;z-index:1;left:0;top:0;display:block;border:1px solid rgba(222,185,121,.32);border-radius:999px;background:rgba(191,145,74,.18);opacity:0;pointer-events:none;transition:transform .42s cubic-bezier(.2,.9,.2,1),opacity .18s}
+ .lw-nav-indicator.is-visible{opacity:1}.lw-nav-indicator.no-transition{transition:none}
+ .main-navigation ul.menu>li.lw-watch-menu>.sub-menu{left:0;min-width:13rem;border-radius:0 0 10px 10px}
+ .site-header-cart .cart-contents{padding-top:1.1rem;padding-bottom:1.1rem}
+}
+.main-navigation a:focus-visible,.menu-toggle:focus-visible{outline:2px solid #e2be7c;outline-offset:3px}
+@media(max-width:767px){
+ .main-navigation .handheld-navigation ul.menu>li.lw-watch-menu>.sub-menu{display:block;margin:.2rem 0 .5rem 1rem;padding-left:1rem;border-left:1px solid #8e7047}
+ .main-navigation .handheld-navigation ul.menu>li.lw-watch-menu>.sub-menu a{padding:.48rem .6rem;color:#e3d8c8}
+}
+@media(prefers-reduced-motion:reduce){.lw-nav-indicator,.main-navigation .primary-navigation>ul.menu>li>a{transition:none}}
+
+/* Brand and product search in the header. */
+.site-header{padding-top:0;background:#15130f}
+.site-header>.col-full{width:min(1180px,calc(100% - 40px));max-width:1180px;margin:0 auto;padding:clamp(1.3rem,2.5vw,2rem) 0;display:flex;align-items:center;justify-content:space-between;gap:2rem}
+.site-header>.col-full::before,.site-header>.col-full::after{display:none}
+.site-header .site-branding{float:none;width:auto;max-width:620px;margin:0;flex:1 1 auto}
+.site-header .site-branding .site-title{margin:0;line-height:1.05;font-family:var(--lw-font-display);font-size:clamp(1.9rem,3.5vw,3rem);font-weight:500;letter-spacing:-.02em}
+.site-header .site-branding .site-title a{color:#f7f1e6;text-decoration:none}
+.site-header .site-branding .site-title a:focus-visible{outline:2px solid #d5b477;outline-offset:5px}
+.site-header .site-branding .site-description{margin:.55rem 0 0;color:#c9bda9;font-size:.88rem;line-height:1.4;letter-spacing:.015em}
+.site-header .site-search{float:none;width:min(330px,34%);margin:0;flex:0 1 330px}
+.site-header .site-search .widget{margin:0}
+.site-header .site-search form{position:relative;margin:0}
+.site-header .site-search .search-field{width:100%;min-height:50px;box-sizing:border-box;padding:.8rem 1rem .8rem 2.8rem;border:1px solid #6d5e48;border-radius:999px;background:#25221c;color:#f7f1e6;box-shadow:none;font-size:.92rem;transition:border-color .2s,background-color .2s}
+.site-header .site-search .search-field::placeholder{color:#c4b8a5;opacity:1}
+.site-header .site-search .search-field:focus{outline:2px solid #d5b477;outline-offset:2px;border-color:#d5b477;background:#2b2720}
+.site-header .site-search .widget_product_search form::before{color:#d5b477;left:1rem;top:50%;transform:translateY(-50%)}
+@media(max-width:767px){.site-header>.col-full{width:calc(100% - 32px);padding:1.25rem 0;flex-wrap:wrap;gap:1rem}.site-header .site-branding{width:100%;flex-basis:100%}.site-header .site-branding .site-title{font-size:2rem}.site-header .site-branding .site-description{font-size:.8rem}.site-header .site-search{display:block;width:100%;flex-basis:100%;max-width:none}.site-header .site-search .search-field{min-height:46px}.site-header .site-search .widget_product_search form::before{display:block}}
+@media(prefers-reduced-motion:reduce){.site-header .site-search .search-field{transition:none}}

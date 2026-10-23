@@ -1,0 +1,42 @@
+.page-template-default .lw-brands { max-width: 1320px; margin: 0 auto 5rem; color: #1f1b17; }
+.lw-brands__intro { padding: clamp(2rem,5vw,5rem); background: #171713; color: #fff; border-radius: 14px; }
+.lw-brands__overline { color: #d9b982; font-size: .75rem; letter-spacing: .12em; font-weight: 700; }
+.lw-brands__intro h1 { color: #fff; font-family: var(--lw-font-display,Georgia,serif); font-size: clamp(2.7rem,6vw,5rem); line-height: 1.04; margin: 0 0 1.25rem; }
+.lw-brands__intro h1 em { color: #e0bd83; font-weight: inherit; }
+.lw-brands__intro > p:not(.lw-brands__overline) { max-width: 63ch; color: #e3dcd1; }
+.lw-brands__nav { display: flex; flex-wrap: wrap; gap: .65rem; margin: 1.8rem 0 1rem; }
+.lw-brands__nav a { display: inline-flex; min-height: 44px; align-items: center; padding: .55rem 1.05rem; color: #fff; border: 1px solid #8b7961; border-radius: 4px; text-decoration: none; }
+.lw-brands__nav a:hover,.lw-brands__nav a:focus-visible,.lw-brands__nav a[aria-current="true"] { background: #e0bd83; color: #171713; }
+.lw-brands__intro .lw-brands__notice { font-size: .82rem; margin: 1.2rem 0 0; color: #d7cab9; }
+.lw-brands__empty { margin-top: clamp(2rem,5vw,4rem); padding: clamp(2rem,5vw,4rem); text-align: center; border: 1px solid #d9d0c2; border-radius: 10px; background: #fff; }
+.lw-brands__empty h2 { margin: 0 0 .5rem; font-family: var(--lw-font-display,Georgia,serif); font-size: clamp(1.8rem,3vw,2.5rem); }
+.lw-brands__empty p { margin: 0; color: #655e54; }
+.lw-brands__section { padding-top: clamp(3rem,6vw,5.5rem); scroll-margin-top: 2rem; }
+.lw-brands__heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid #d9d0c2; }
+.lw-brands__heading p { margin: 0; font-size: .8rem; color: #6e5b42; }
+.lw-brands__heading h2 { font-family: var(--lw-font-display,Georgia,serif); font-size: clamp(2.2rem,4vw,3.3rem); margin: .25rem 0 1rem; }
+.lw-brands__heading > span { padding-bottom: 1.2rem; color: #655e54; font-size: .85rem; }
+.lw-brands__filters { display: flex; flex-wrap: wrap; align-items: end; gap: .75rem; margin: 0 0 1.5rem; padding: 1rem; border: 1px solid #e1d8ca; border-radius: 10px; background: #fff; }
+.lw-brands__filter-field { display: grid; gap: .3rem; min-width: 160px; }
+.lw-brands__filter-field label { color: #655e54; font-size: .76rem; font-weight: 750; }
+.lw-brands__filter-field select { min-height: 42px; padding: .45rem 2rem .45rem .7rem; border: 1px solid #cfc4b3; border-radius: 6px; background: #fff; color: #1f1b17; font: inherit; }
+.lw-brands__filters button { min-height: 42px; padding: .55rem 1rem; border: 1px solid #76521e; border-radius: 6px; background: #76521e; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+.lw-brands__filters button:hover { background: #573b13; }
+.lw-brands__filters > a { min-height: 42px; display: inline-flex; align-items: center; padding: .55rem .35rem; color: #76521e; font-size: .9rem; font-weight: 700; }
+.lw-brands__no-results { padding: 1.2rem; border-left: 3px solid #a87932; background: #f5f0e7; color: #655e54; }
+.lw-brands__grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 1.25rem; }
+.lw-brands__card { min-width: 0; background: #fff; border-radius: 10px; overflow: hidden; }
+.lw-brands__card > a { display: block; color: inherit; height: 100%; text-decoration: none; }
+.lw-brands__card > a:focus-visible { outline: 3px solid #946a32; outline-offset: 3px; }
+.lw-brands__image { aspect-ratio: 1/1; background: #f2eee7; overflow: hidden; }
+.lw-brands__image img { width: 100%; height: 100%; display: block; object-fit: contain; transition: transform .35s ease; }
+@media (hover:hover) { .lw-brands__card:hover img { transform: scale(1.045); } }
+.lw-brands__details { padding: 1rem 1.1rem 1.25rem; }
+.lw-brands__details > span:first-child { font-size: .73rem; color: #735c3f; }
+.lw-brands__details h3 { margin: .35rem 0 .8rem; font-size: 1.05rem; line-height: 1.35; overflow-wrap: anywhere; }
+.lw-brands__price { display: block; margin: 0 0 .75rem; color: #1f1b17; font-size: .88rem; }
+.lw-brands__checked { display: block; margin: -.45rem 0 .7rem; color: #655e54; font-size: .73rem; }
+.lw-brands__source { color: #76521e; font-size: .82rem; font-weight: 700; }
+@media (max-width:900px) { .lw-brands__grid { grid-template-columns: repeat(3,minmax(0,1fr)); } }
+@media (max-width:600px) { .lw-brands__grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem; } .lw-brands__intro { border-radius: 8px; } .lw-brands__filters { align-items: stretch; } .lw-brands__filter-field { flex: 1 1 100%; } .lw-brands__filters button { flex: 1; } .lw-brands__details { padding: .8rem; } .lw-brands__details h3 { font-size: .94rem; } }
+@media (prefers-reduced-motion:reduce) { .lw-brands__image img { transition:none; } }

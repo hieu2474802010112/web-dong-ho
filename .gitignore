@@ -2,6 +2,8 @@
 /*
 !/.gitignore
 !/README.md
+!/docs/
+!/docs/**
 !/scripts/
 !/scripts/**
 !/wordpress/
@@ -30,6 +32,7 @@
 !/wordpress/wp-content/uploads/woocommerce-placeholder.webp
 !/wordpress/wp-content/uploads/2026/
 !/wordpress/wp-content/uploads/2026/**
+/wordpress/wp-content/uploads/2026/10/luxury-new-arrivals/*.png
 
 # Local secrets, generated archives, caches and logs.
 wp-config.php
@@ -38,3 +41,4 @@ wp-config.php
 *.zip
 .DS_Store
 Thumbs.db
+scripts/__pycache__/

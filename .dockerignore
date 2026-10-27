@@ -1,0 +1,15 @@
+.git
+.github
+.env
+.env.*
+wp-config.php
+*.sql
+*.zip
+*.log
+Thumbs.db
+node_modules
+tmp
+netlify-export
+lab-reports
+wordpress/wp-admin
+wordpress/wp-includes

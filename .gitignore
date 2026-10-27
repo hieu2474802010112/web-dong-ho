@@ -7,6 +7,11 @@
 !/scripts/
 !/scripts/**
 !/wordpress/
+!/Dockerfile
+!/.dockerignore
+!/railway.toml
+!/docker/
+!/docker/**
 
 # WordPress core and local configuration are installed separately.
 /wordpress/*

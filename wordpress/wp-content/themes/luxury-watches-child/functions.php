@@ -2,6 +2,14 @@
 
 require_once get_stylesheet_directory() . '/inc/seo.php';
 require_once get_stylesheet_directory() . '/inc/brand-catalog.php';
+require_once get_stylesheet_directory() . '/inc/watch-angle-galleries.php';
+
+add_action('wp_head', function () {
+    printf(
+        '<link rel="icon" type="image/svg+xml" href="%s" />' . "\n",
+        esc_url(get_stylesheet_directory_uri() . '/assets/lw-favicon.svg')
+    );
+}, 2);
 
 // Older article content can contain local URLs saved before the IPv4 fallback.
 add_filter('the_content', function ($content) {
@@ -50,11 +58,16 @@ add_action('after_setup_theme', function () {
             if ($url) { $urls[] = $url; }
             if (count($urls) >= 4) { break; }
         }
+        $urls = array_values(array_unique(array_merge($urls, lw_get_curated_watch_angles($product))));
+        $urls = array_slice($urls, 0, 4);
         echo '<span class="lw-watch-preview"';
         if ($urls) { echo ' data-watch-gallery="' . esc_attr(wp_json_encode($urls)) . '"'; }
         echo '>';
         woocommerce_template_loop_product_thumbnail();
-        if ($urls) { echo '<img class="lw-watch-preview__alternate" alt="" aria-hidden="true" decoding="async"><span class="lw-watch-preview__hint" aria-hidden="true">Nhiều góc nhìn</span>'; }
+        if ($urls) {
+            // Keep the alternate layer request-free until hover JS selects a real angle.
+            echo '<img class="lw-watch-preview__alternate" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="" aria-hidden="true" decoding="async"><span class="lw-watch-preview__hint" aria-hidden="true">Nhiều góc nhìn</span>';
+        }
         echo '</span>';
     }, 10);
 });

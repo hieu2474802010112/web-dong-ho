@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Luxury Watches Auctions
  * Description: Phiên đấu giá đồng hồ với lịch mở/đóng, bước giá, lịch sử và kiểm soát trả giá đồng thời.
- * Version: 2.0.1
+ * Version: 2.1.0
  * Author: Luxury Watches
  * Text Domain: luxury-auctions
  */
@@ -10,7 +10,7 @@
 if (!defined('ABSPATH')) exit;
 
 final class Luxury_Watches_Auctions {
-    const VERSION = '2.0.1';
+    const VERSION = '2.1.0';
 
     public static function init() {
         add_action('init', [__CLASS__, 'register_post_type']);
@@ -21,6 +21,8 @@ final class Luxury_Watches_Auctions {
         add_action('admin_post_luxury_place_bid', [__CLASS__, 'place_bid']);
         add_action('admin_post_nopriv_luxury_place_bid', [__CLASS__, 'require_login']);
         add_action('wp_enqueue_scripts', [__CLASS__, 'assets']);
+        add_action('rest_api_init', [__CLASS__, 'register_rest_routes']);
+        add_filter('rest_pre_serve_request', [__CLASS__, 'serve_cors_headers'], 10, 4);
     }
 
     public static function activate() {
@@ -139,6 +141,189 @@ final class Luxury_Watches_Auctions {
 
     private static function status_label($state) {
         return ['live' => 'Đang diễn ra', 'upcoming' => 'Sắp mở', 'ended' => 'Đã kết thúc'][$state] ?? 'Đang cập nhật';
+    }
+
+    public static function register_rest_routes() {
+        register_rest_route('luxury/v1', '/health', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [__CLASS__, 'api_health'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route('luxury/v1', '/products', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [__CLASS__, 'api_products'],
+            'permission_callback' => '__return_true',
+            'args' => [
+                'page' => ['default' => 1, 'sanitize_callback' => 'absint'],
+                'per_page' => ['default' => 12, 'sanitize_callback' => 'absint'],
+                'search' => ['default' => '', 'sanitize_callback' => 'sanitize_text_field'],
+                'category' => ['default' => '', 'sanitize_callback' => 'sanitize_title'],
+            ],
+        ]);
+        register_rest_route('luxury/v1', '/auctions', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [__CLASS__, 'api_auctions'],
+            'permission_callback' => '__return_true',
+            'args' => [
+                'page' => ['default' => 1, 'sanitize_callback' => 'absint'],
+                'per_page' => ['default' => 24, 'sanitize_callback' => 'absint'],
+                'state' => ['default' => '', 'sanitize_callback' => 'sanitize_key'],
+            ],
+        ]);
+        register_rest_route('luxury/v1', '/auctions/(?P<id>\d+)', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [__CLASS__, 'api_auction'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route('luxury/v1', '/auctions/(?P<id>\d+)/bids', [
+            'methods' => WP_REST_Server::CREATABLE,
+            'callback' => [__CLASS__, 'api_place_bid'],
+            'permission_callback' => [__CLASS__, 'api_can_bid'],
+            'args' => [
+                'amount' => ['required' => true, 'sanitize_callback' => 'absint'],
+            ],
+        ]);
+    }
+
+    public static function serve_cors_headers($served, $result, $request, $server) {
+        $origin = get_http_origin();
+        $allowed = defined('LW_API_ALLOWED_ORIGINS') && is_array(LW_API_ALLOWED_ORIGINS) ? LW_API_ALLOWED_ORIGINS : [];
+        if ($origin && in_array($origin, $allowed, true)) {
+            header('Access-Control-Allow-Origin: ' . esc_url_raw($origin));
+            header('Access-Control-Allow-Credentials: true');
+            header('Access-Control-Allow-Headers: Authorization, Content-Type, X-WP-Nonce');
+            header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+            header('Vary: Origin');
+        }
+        return $served;
+    }
+
+    public static function api_health() {
+        return rest_ensure_response([
+            'status' => 'ok',
+            'service' => 'luxury-watches-api',
+            'version' => self::VERSION,
+            'wordpress' => get_bloginfo('version'),
+            'timestamp' => current_time('c'),
+        ]);
+    }
+
+    private static function product_response($product) {
+        $categories = [];
+        foreach ($product->get_category_ids() as $category_id) {
+            $term = get_term($category_id, 'product_cat');
+            if ($term && !is_wp_error($term)) $categories[] = ['id' => (int) $term->term_id, 'name' => $term->name, 'slug' => $term->slug];
+        }
+        return [
+            'id' => $product->get_id(),
+            'name' => $product->get_name(),
+            'slug' => $product->get_slug(),
+            'sku' => $product->get_sku(),
+            'price' => (float) $product->get_price(),
+            'regular_price' => (float) $product->get_regular_price(),
+            'currency' => get_woocommerce_currency(),
+            'permalink' => get_permalink($product->get_id()),
+            'image' => $product->get_image_id() ? wp_get_attachment_image_url($product->get_image_id(), 'large') : wc_placeholder_img_src('large'),
+            'stock_status' => $product->get_stock_status(),
+            'categories' => $categories,
+        ];
+    }
+
+    public static function api_products(WP_REST_Request $request) {
+        if (!function_exists('wc_get_products')) return new WP_Error('woocommerce_missing', 'WooCommerce chưa được kích hoạt.', ['status' => 503]);
+        $page = max(1, (int) $request->get_param('page'));
+        $per_page = min(48, max(1, (int) $request->get_param('per_page')));
+        $args = ['status' => 'publish', 'limit' => $per_page, 'page' => $page, 'paginate' => true, 'orderby' => 'date', 'order' => 'DESC'];
+        $search = $request->get_param('search');
+        if (is_string($search) && trim($search) !== '') $args['s'] = sanitize_text_field($search);
+        $category = $request->get_param('category');
+        if (is_string($category) && trim($category) !== '') $args['category'] = [sanitize_title($category)];
+        $results = wc_get_products($args);
+        $data = array_map([__CLASS__, 'product_response'], $results->products);
+        $response = rest_ensure_response($data);
+        $response->header('X-WP-Total', (string) $results->total);
+        $response->header('X-WP-TotalPages', (string) $results->max_num_pages);
+        return $response;
+    }
+
+    private static function auction_response($auction_id) {
+        $summary = self::bid_summary($auction_id);
+        $start_price = absint(get_post_meta($auction_id, '_lw_start_price', true));
+        $increment = max(1, absint(get_post_meta($auction_id, '_lw_bid_increment', true)));
+        $state = self::state($auction_id);
+        $start = self::timestamp(get_post_meta($auction_id, '_lw_start_at', true));
+        $end = self::timestamp(get_post_meta($auction_id, '_lw_end_at', true));
+        return [
+            'id' => (int) $auction_id,
+            'title' => get_the_title($auction_id),
+            'slug' => get_post_field('post_name', $auction_id),
+            'permalink' => get_permalink($auction_id),
+            'state' => $state,
+            'state_label' => self::status_label($state),
+            'image' => self::image_url($auction_id),
+            'start_price' => $start_price,
+            'current_bid' => max($start_price, $summary['highest']),
+            'minimum_bid' => max($start_price, $summary['highest'] > 0 ? $summary['highest'] + $increment : $start_price),
+            'bid_increment' => $increment,
+            'bid_count' => $summary['count'],
+            'starts_at' => $start ? wp_date(DATE_ATOM, $start) : null,
+            'ends_at' => $end ? wp_date(DATE_ATOM, $end) : null,
+        ];
+    }
+
+    public static function api_auctions(WP_REST_Request $request) {
+        $page = max(1, (int) $request->get_param('page'));
+        $per_page = min(48, max(1, (int) $request->get_param('per_page')));
+        $query = new WP_Query(['post_type' => 'watch_auction', 'post_status' => 'publish', 'posts_per_page' => $per_page, 'paged' => $page, 'meta_key' => '_lw_end_at', 'orderby' => ['meta_value' => 'ASC', 'date' => 'DESC']]);
+        $data = [];
+        foreach ($query->posts as $post) {
+            $item = self::auction_response($post->ID);
+            $filter = $request->get_param('state');
+            if (!is_string($filter)) $filter = '';
+            if ($filter && $filter !== $item['state']) continue;
+            $data[] = $item;
+        }
+        $response = rest_ensure_response($data);
+        $response->header('X-WP-Total', (string) $query->found_posts);
+        $response->header('X-WP-TotalPages', (string) $query->max_num_pages);
+        return $response;
+    }
+
+    public static function api_auction(WP_REST_Request $request) {
+        $id = absint($request['id']);
+        if (!$id || get_post_type($id) !== 'watch_auction' || get_post_status($id) !== 'publish') return new WP_Error('auction_not_found', 'Không tìm thấy phiên đấu giá.', ['status' => 404]);
+        return rest_ensure_response(self::auction_response($id));
+    }
+
+    public static function api_can_bid() {
+        if (!is_user_logged_in()) return new WP_Error('rest_not_logged_in', 'Bạn cần đăng nhập để đặt giá.', ['status' => 401]);
+        return true;
+    }
+
+    public static function api_place_bid(WP_REST_Request $request) {
+        $auction_id = absint($request['id']);
+        $amount = absint($request->get_param('amount'));
+        if (!$auction_id || get_post_type($auction_id) !== 'watch_auction' || get_post_status($auction_id) !== 'publish') return new WP_Error('auction_not_found', 'Không tìm thấy phiên đấu giá.', ['status' => 404]);
+        if (self::state($auction_id) !== 'live') return new WP_Error('auction_closed', 'Phiên đấu giá không còn nhận giá.', ['status' => 409]);
+        $user_id = get_current_user_id();
+        $rate_key = 'lw_bid_' . md5($auction_id . ':' . $user_id);
+        if (get_transient($rate_key)) return new WP_Error('rate_limited', 'Bạn thao tác quá nhanh, vui lòng thử lại sau vài giây.', ['status' => 429]);
+        set_transient($rate_key, 1, 3);
+        $start_price = absint(get_post_meta($auction_id, '_lw_start_price', true));
+        $increment = max(1, absint(get_post_meta($auction_id, '_lw_bid_increment', true)));
+        if ($amount <= 0) return new WP_Error('invalid_amount', 'Mức giá không hợp lệ.', ['status' => 400]);
+        global $wpdb;
+        $table = $wpdb->prefix . 'luxury_auction_bids';
+        $wpdb->query('START TRANSACTION');
+        $locked = $wpdb->get_var($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE ID = %d FOR UPDATE", $auction_id));
+        if (!$locked || self::state($auction_id) !== 'live') { $wpdb->query('ROLLBACK'); return new WP_Error('auction_closed', 'Phiên đấu giá đã đóng.', ['status' => 409]); }
+        $summary = self::bid_summary($auction_id);
+        $minimum = $summary['highest'] > 0 ? $summary['highest'] + $increment : $start_price;
+        if ($amount < $minimum || (($amount - $start_price) % $increment) !== 0) { $wpdb->query('ROLLBACK'); return new WP_Error('invalid_increment', 'Mức giá chưa đạt bước giá tối thiểu.', ['status' => 422, 'minimum_bid' => $minimum]); }
+        $inserted = $wpdb->insert($table, ['auction_id' => $auction_id, 'user_id' => $user_id, 'amount' => $amount, 'created_at' => current_time('mysql'), 'ip_hash' => hash('sha256', (string) ($_SERVER['REMOTE_ADDR'] ?? '') . wp_salt('nonce'))], ['%d', '%d', '%d', '%s', '%s']);
+        $wpdb->query($inserted ? 'COMMIT' : 'ROLLBACK');
+        if (!$inserted) return new WP_Error('bid_save_failed', 'Không thể lưu lượt trả giá.', ['status' => 500]);
+        return rest_ensure_response(['accepted' => true, 'auction' => self::auction_response($auction_id)]);
     }
 
     public static function auction_card($auction_id) {

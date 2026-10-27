@@ -1,8 +1,9 @@
 .lw-watch-preview { display: block; position: relative; overflow: hidden; aspect-ratio: 1 / 1; }
 .woocommerce ul.products li.product .lw-watch-preview > img { display: block; width: 100%; height: 100%; aspect-ratio: 1 / 1; object-fit: cover; margin: 0; border-radius: 0; }
-.woocommerce ul.products li.product .lw-watch-preview__alternate { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity .3s ease; }
-.woocommerce ul.products li.product .lw-watch-preview__alternate.is-visible { opacity: 1; }
-.lw-watch-preview__hint { position: absolute; bottom: .75rem; right: .75rem; z-index: 2; padding: .35rem .6rem; border-radius: 4px; color: #fff; background: rgba(18,15,12,.82); font-size: .72rem; line-height: 1.3; }
+.woocommerce ul.products li.product .lw-watch-preview__alternate { position: absolute; inset: 0; opacity: 0; pointer-events: none; transform: scale(1.015); transition: opacity .38s ease, transform 1.5s cubic-bezier(.22,1,.36,1); }
+.woocommerce ul.products li.product .lw-watch-preview__alternate.is-visible { opacity: 1; transform: scale(1); }
+.lw-watch-preview__hint { position: absolute; bottom: .75rem; right: .75rem; z-index: 2; display: inline-flex; align-items: center; gap: .42rem; padding: .38rem .62rem; border: 1px solid rgba(255,255,255,.2); border-radius: 999px; color: #fff; background: rgba(18,15,12,.78); backdrop-filter: blur(8px); font-size: .7rem; line-height: 1.3; letter-spacing: .02em; }
+.lw-watch-preview__hint::before { content: ''; width: .38rem; height: .38rem; flex: 0 0 auto; border-radius: 50%; background: #d6b06b; box-shadow: 0 0 0 3px rgba(214,176,107,.18); }
 
 @media (hover: hover) {
   .lw-auction-card .lw-auction-card__image:hover img { transform: scale(1.2); }

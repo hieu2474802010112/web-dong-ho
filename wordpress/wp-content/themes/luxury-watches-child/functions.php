@@ -27,7 +27,13 @@ add_filter('nav_menu_link_attributes', function ($attributes) {
 });
 
 add_action('wp_enqueue_scripts', function () {
-    wp_enqueue_style('storefront-parent', get_template_directory_uri() . '/style.css', [], wp_get_theme('storefront')->get('Version'));
+    wp_enqueue_style(
+        'luxury-google-fonts',
+        'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap',
+        [],
+        null
+    );
+    wp_enqueue_style('storefront-parent', get_template_directory_uri() . '/style.css', ['luxury-google-fonts'], wp_get_theme('storefront')->get('Version'));
     wp_enqueue_style('luxury-watches', get_stylesheet_uri(), ['storefront-parent'], filemtime(get_stylesheet_directory() . '/style.css'));
     $motion_css = get_stylesheet_directory() . '/assets/motion.css';
     $motion_js = get_stylesheet_directory() . '/assets/motion.js';
@@ -151,6 +157,8 @@ add_action('woocommerce_before_shop_loop_item_title', function () {
 
 add_action('init', function () {
     remove_action('storefront_footer', 'storefront_credit', 20);
+    remove_action('storefront_footer', 'storefront_footer_widgets', 10);
+    add_action('storefront_footer', 'storefront_footer_widgets', 30);
 });
 
 add_action('storefront_footer', function () {
@@ -234,3 +242,192 @@ add_filter('gettext', function ($translated, $text, $domain) {
     ];
     return $labels[$text] ?? $translated;
 }, 20, 3);
+
+// Subtitle for On Sale section to enrich visual presentation
+add_action('storefront_homepage_after_on_sale_products_title', function() {
+    echo '<p class="lw-section-subtitle">Tuyển chọn các phiên bản đồng hồ cao cấp với mức giá ưu đãi đặc quyền giới hạn trong tháng</p>';
+});
+
+/**
+ * ==========================================================================
+ * LUXURY CART PAGE ENHANCEMENTS
+ * ==========================================================================
+ */
+// 1. Checkout Steps Indicator & Assurance Bar Before Cart
+add_action('woocommerce_before_cart', 'lw_render_cart_header_enhancements', 5);
+function lw_render_cart_header_enhancements() {
+    ?>
+    <div class="lw-cart-header-wrapper">
+        <!-- Breadcrumb / Checkout Steps -->
+        <nav class="lw-checkout-steps" aria-label="Tiến trình thanh toán">
+            <div class="lw-step is-active">
+                <span class="lw-step-num">1</span>
+                <span class="lw-step-label">Giỏ hàng của bạn</span>
+            </div>
+            <div class="lw-step-divider"></div>
+            <div class="lw-step">
+                <span class="lw-step-num">2</span>
+                <span class="lw-step-label">Thông tin & Thanh toán</span>
+            </div>
+            <div class="lw-step-divider"></div>
+            <div class="lw-step">
+                <span class="lw-step-num">3</span>
+                <span class="lw-step-label">Hoàn tất đơn hàng</span>
+            </div>
+        </nav>
+
+        <!-- Luxury Assurance Banner -->
+        <div class="lw-cart-assurance-banner">
+            <div class="lw-cart-assurance-item">
+                <span class="lw-assurance-icon">🛡️</span>
+                <div>
+                    <strong>Bảo hiểm vận chuyển 100%</strong>
+                    <span>Bảo vệ trọn vẹn giá trị đồng hồ trên toàn hành trình</span>
+                </div>
+            </div>
+            <div class="lw-cart-assurance-item">
+                <span class="lw-assurance-icon">🔍</span>
+                <div>
+                    <strong>Quyền đồng kiểm tận tay</strong>
+                    <span>Kiểm tra thân vỏ & thẻ bảo hành trước khi thanh toán</span>
+                </div>
+            </div>
+            <div class="lw-cart-assurance-item">
+                <span class="lw-assurance-icon">⚡</span>
+                <div>
+                    <strong>Giao hỏa tốc chuyên biệt</strong>
+                    <span>Giao trong 2 giờ tại nội thành TP.HCM & Hà Nội</span>
+                </div>
+            </div>
+            <div class="lw-cart-assurance-item">
+                <span class="lw-assurance-icon">✨</span>
+                <div>
+                    <strong>Bảo hành quốc tế 5 năm</strong>
+                    <span>Hỗ trợ kỹ thuật và bảo dưỡng định kỳ Atelier</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+
+// 2. Trust Badges & VIP Concierge Support in Cart Totals
+add_action('woocommerce_after_cart_totals', 'lw_render_cart_trust_and_support');
+function lw_render_cart_trust_and_support() {
+    ?>
+    <div class="lw-cart-trust-box">
+        <div class="lw-trust-title">
+            <span>🔒 Thanh toán bảo mật SSL 256-bit</span>
+        </div>
+        <div class="lw-payment-methods-icons">
+            <span class="lw-pay-tag">Chuyển khoản QR</span>
+            <span class="lw-pay-tag">COD Đồng kiểm</span>
+            <span class="lw-pay-tag">Visa / Master</span>
+            <span class="lw-pay-tag">Thẻ ATM Napas</span>
+        </div>
+        <div class="lw-cart-concierge-card">
+            <div class="lw-concierge-avatar">VIP</div>
+            <div class="lw-concierge-text">
+                <strong>Cần tư vấn riêng cho đơn hàng?</strong>
+                <p>Chuyên viên Concierge sẵn sàng hỗ trợ 24/7 qua hotline: <a href="tel:0988123456">0988 123 456</a></p>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+
+// 3. Compact Corner Toast Notification (Bottom-Right, disappears after 1.5s)
+add_action('wp_footer', 'lw_render_add_to_cart_toast_notification');
+function lw_render_add_to_cart_toast_notification() {
+    $cart_url = function_exists('wc_get_cart_url') ? wc_get_cart_url() : home_url('/gio-hang/');
+    ?>
+    <div id="lwCartToast" class="lw-cart-toast" role="status" aria-live="polite">
+        <div class="lw-cart-toast__progress" id="lwToastProgress"></div>
+        <div class="lw-cart-toast__inner">
+            <div class="lw-cart-toast__message">
+                <span class="lw-cart-toast__icon">&#10003;</span>
+                <div class="lw-cart-toast__content">
+                    <span class="lw-cart-toast__badge">ĐÃ THÊM VÀO GIỎ</span>
+                    <span class="lw-cart-toast__text" id="lwCartToastText">Đã thêm vào đơn hàng!</span>
+                </div>
+            </div>
+            <div class="lw-cart-toast__actions">
+                <a href="<?php echo esc_url($cart_url); ?>" class="lw-cart-toast__link">Xem giỏ &rarr;</a>
+                <button type="button" class="lw-cart-toast__close" id="lwToastClose" aria-label="Đóng">&times;</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    jQuery(function($) {
+        var toastTimer = null;
+
+        function showCartToast(productName) {
+            var $toast = $('#lwCartToast');
+            var $text = $('#lwCartToastText');
+            var $progress = $('#lwToastProgress');
+            if (!$toast.length) return;
+
+            // Remove any WooCommerce added_to_cart link below buttons
+            $('a.added_to_cart').remove();
+
+            if (productName) {
+                $text.html('<strong>' + productName + '</strong>');
+            } else {
+                $text.text('Đã thêm sản phẩm vào đơn hàng!');
+            }
+
+            // Reset animation
+            $progress.removeClass('is-animating');
+            void $progress[0].offsetWidth; // force reflow
+            $progress.addClass('is-animating');
+
+            $toast.addClass('is-visible');
+
+            if (toastTimer) {
+                clearTimeout(toastTimer);
+            }
+
+            // Disappear after exactly 1.5 seconds (1500ms)
+            toastTimer = setTimeout(function() {
+                $toast.removeClass('is-visible');
+            }, 1500);
+        }
+
+        $('#lwToastClose').on('click', function(e) {
+            e.preventDefault();
+            if (toastTimer) clearTimeout(toastTimer);
+            $('#lwCartToast').removeClass('is-visible');
+        });
+
+        $(document.body).on('added_to_cart', function(event, fragments, cart_hash, $button) {
+            var name = '';
+            if ($button && $button.length) {
+                var $card = $button.closest('.product');
+                if ($card.length) {
+                    name = $card.find('.woocommerce-loop-product__title').first().text().trim();
+                }
+                if (!name) {
+                    name = $button.attr('aria-label') ? $button.attr('aria-label').replace(/Thêm vào giỏ hàng: /i, '').replace(/[“”"]/g, '').trim() : '';
+                }
+            }
+            showCartToast(name);
+
+            setTimeout(function() {
+                $('a.added_to_cart').remove();
+            }, 50);
+        });
+    });
+    </script>
+    <?php
+}
+
+/**
+ * Nạp chức năng Lab 9 (Hooks, Shortcode, Custom Post Type)
+ */
+if (file_exists(WP_CONTENT_DIR . '/themes/astra/inc/lab9-functions.php')) {
+    require_once WP_CONTENT_DIR . '/themes/astra/inc/lab9-functions.php';
+}
+
+
+

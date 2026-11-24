@@ -1,4 +1,11 @@
 <?php
+$queried_id = get_queried_object_id();
+$template = get_post_meta($queried_id, '_wp_page_template', true);
+if ($template === 'template-homepage.php' || (isset($_GET['layout']) && $_GET['layout'] === 'storefront')) {
+    require get_template_directory() . '/template-homepage.php';
+    return;
+}
+
 get_header();
 
 $products = function_exists('wc_get_products') ? wc_get_products(['status' => 'publish', 'limit' => 8, 'orderby' => 'date', 'order' => 'DESC']) : [];

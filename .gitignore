@@ -6,6 +6,8 @@
 !/docs/**
 !/scripts/
 !/scripts/**
+!/lab-reports/
+!/lab-reports/**
 !/wordpress/
 !/Dockerfile
 !/.dockerignore
@@ -24,12 +26,20 @@
 !/wordpress/wp-content/themes/luxury-watches-child/
 !/wordpress/wp-content/themes/luxury-watches-child/**
 /wordpress/wp-content/themes/luxury-watches-child/assets/images/*.png
+!/wordpress/wp-content/themes/astra/
+/wordpress/wp-content/themes/astra/*
+!/wordpress/wp-content/themes/astra/functions.php
+!/wordpress/wp-content/themes/astra/inc/
+/wordpress/wp-content/themes/astra/inc/*
+!/wordpress/wp-content/themes/astra/inc/lab9-functions.php
 
-# Project-owned auction plugin.
+# Project-owned plugins.
 !/wordpress/wp-content/plugins/
 /wordpress/wp-content/plugins/*
 !/wordpress/wp-content/plugins/luxury-auctions/
 !/wordpress/wp-content/plugins/luxury-auctions/**
+!/wordpress/wp-content/plugins/ai-content-guard/
+!/wordpress/wp-content/plugins/ai-content-guard/**
 
 # Media used by products and articles. Runtime logs and analytics stay ignored.
 !/wordpress/wp-content/uploads/
@@ -44,6 +54,7 @@ wp-config.php
 *.log
 *.sql
 *.zip
+!/lab-reports/lab9/astra_lab9.zip
 .DS_Store
 Thumbs.db
 scripts/__pycache__/
